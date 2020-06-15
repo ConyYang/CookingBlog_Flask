@@ -1,2 +1,6 @@
 .idea
 venv
+cooking/__pycache__/
+cooking/blueprints/__pycache__/
+cooking/.DS_Store
+.DS_Store
