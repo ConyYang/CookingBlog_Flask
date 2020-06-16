@@ -15,3 +15,6 @@ pip install faker
 pip install django
 pip install django.db
 
+pip install flask_wtf
+
+

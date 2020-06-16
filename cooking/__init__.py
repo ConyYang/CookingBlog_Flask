@@ -5,6 +5,7 @@ import os
 from cooking.blueprints.admin import admin_bp
 from cooking.blueprints.cook import cook_bp
 from cooking.blueprints.auth import auth_bp
+from cooking.models import Admin, Category, Comment
 from cooking.extensions import *
 import click
 
@@ -51,7 +52,11 @@ def register_shell_context(app):
 
 
 def register_template_context(app):
-    pass
+    @app.context_processor
+    def make_template_context():
+        admin = Admin.query.first()
+        categories = Category.query.order_by(Category.label)
+        return dict(admin=admin, categories=categories)
 
 
 def register_errors(app):

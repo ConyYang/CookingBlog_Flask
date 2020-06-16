@@ -20,15 +20,15 @@ class Category(db.Model):
 
 
 class Post(db.Model):
-    id = db.Column(db.Integerm, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(60))
     content = db.Column(db.Text)
-    timestamp = db.Column(db.DateTimem, default=datetime.utcnow, index=True)
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow, index=True)
 
     category_id = db.Column(db.Integer, db.ForeignKey('category.id'))
-    categories = db.relationship('Category', back_populates='posts')
 
-    comments = db.relationship('Comment', backref='post', cascade='all,delete-orphan')
+    category = db.relationship('Category', back_populates='posts')
+    comments = db.relationship('Comment', back_populates='post', cascade='all, delete-orphan')
 
 
 class Comment(db.Model):
@@ -36,18 +36,14 @@ class Comment(db.Model):
     author = db.Column(db.String(30))
     email = db.Column(db.String(254))
     site = db.Column(db.String(255))
-    content = db.Column(db.text)
+    content = db.Column(db.Text)
     from_admin = db.Column(db.Boolean, default=False)  # the comment is from admin or not
     reviewed = db.Column(db.Boolean, default=False)  # Comment by default is not passed
-    timestamp = db.Column(db.DateTimem, default=datetime.utcnow, index=True)
-
-    post_id = db.Column(db.Integer, db.ForeignKey('post.id'))
-    post = db.relationship('Post', back_populates ='comments')
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow, index=True)
 
     replied_id = db.Column(db.Integer, db.ForeignKey('comment.id'))
+    post_id = db.Column(db.Integer, db.ForeignKey('post.id'))
+
+    post = db.relationship('Post', back_populates='comments')
+    replies = db.relationship('Comment', back_populates='replied', cascade='all, delete-orphan')
     replied = db.relationship('Comment', back_populates='replies', remote_side=[id])
-    replies = db.relationship('Comment', back_populates='replied', cascade='all')
-
-
-
-
