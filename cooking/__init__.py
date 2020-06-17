@@ -12,6 +12,7 @@ from flask_login import current_user
 from flask_sqlalchemy import get_debug_queries
 from flask_wtf.csrf import CSRFError
 
+
 import click
 import logging
 from logging.handlers import SMTPHandler, RotatingFileHandler
