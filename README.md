@@ -16,5 +16,6 @@ pip install django
 pip install django.db
 
 pip install flask_wtf
-
-
+pip install flask_login
+pip install flask_debugtoolbar
+pip install flask_migrate

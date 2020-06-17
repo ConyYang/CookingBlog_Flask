@@ -4,7 +4,7 @@ basedir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
 
 
 class BaseConfig(object):
-    SCRET_KEY = os.getenv('SECRET')
+    SECRET_KEY = os.getenv('SECRET_KEY', 'dev key')
     SQLALCHEMY_TRACK_MODIFICATIONS = False
 
     MAIL_SERVER = os.getenv('MAIL_SERVER')

@@ -1,13 +1,20 @@
-from flask import Blueprint, render_template, current_app, abort, make_response
-from cooking.models import Post
+from flask import Blueprint, render_template, current_app, abort, make_response, request, flash, redirect, url_for
+from cooking.models import Post, Category, Comment
+from cooking.forms import AdminCommentForm, CommentForm
 from cooking.utils import redirect_back
+from flask_login import current_user
+from cooking.extensions import db
+from cooking.emails import *
 cook_bp = Blueprint('cook', __name__)
 
 
 @cook_bp.route('/')
 def index():
-    posts = Post.query.order_by(Post.timestamp.desc()).all()
-    return render_template('cook/index.html', posts=posts)
+    page = request.args.get('page', 1, type=int)
+    per_page = current_app.config['COOKLOG_POST_PER_PAGE']
+    pagination = Post.query.order_by(Post.timestamp.desc()).paginate(page, per_page=per_page)
+    posts = pagination.items
+    return render_template('cook/index.html', pagination=pagination, posts=posts)
 
 
 @cook_bp.route('/about')
@@ -22,7 +29,57 @@ def show_category(category_id):
 
 @cook_bp.route('/post/<int:post_id>', methods=['GET', 'POST'])
 def show_post(post_id):
-    return render_template('cook/post.html')
+    post = Post.query.get_or_404(post_id)
+    page = request.args.get('page', 1, type=int)
+    per_page = current_app.config['COOKLOG_COMMENT_PER_PAGE']
+    pagination = Comment.query.with_parent(post).filter_by(reviewed=True).order_by(Comment.timestamp.asc()).paginate(
+        page, per_page)
+    comments = pagination.items
+    if current_user.is_authenticated:
+        form = AdminCommentForm()
+        form.author.data = current_user.name
+        form.email.data = current_app.config['COOKLOG_EMAIL']
+        form.site.data = url_for('.index')
+        from_admin = True
+        reviewed = True
+    else:
+        form = CommentForm()
+        from_admin = False
+        reviewed = False
+
+    if form.validate_on_submit():
+        author = form.author.data
+        email = form.email.data
+        site = form.site.data
+        body = form.body.data
+        comment = Comment(
+            author=author, email=email, site=site, body=body,
+            from_admin=from_admin, post=post, reviewed=reviewed)
+        replied_id = request.args.get('reply')
+        if replied_id:
+            replied_comment = Comment.query.get_or_404(replied_id)
+            comment.replied = replied_comment
+            send_new_reply_email(replied_comment)
+        db.session.add(comment)
+        db.session.commit()
+        if current_user.is_authenticated:  # send message based on authentication status
+            flash('Comment published.', 'success')
+        else:
+            flash('Thanks, your comment will be published after reviewed.', 'info')
+            send_new_comment_email(post)  # send notification email to admin
+        return redirect(url_for('.show_post', post_id=post_id))
+
+    return render_template('cook/post.html',post=post, pagination=pagination, comments=comments)
+
+
+@cook_bp.route('/reply/comment/<int:comment_id>')
+def reply_comment(comment_id):
+    comment = Comment.query.get_or_404(comment_id)
+    if not comment.post.can_comment:
+        flash('Comment is disabled.', 'warning')
+        return redirect(url_for('.show_post', post_id=comment.post.id))
+    return redirect(
+        url_for('.show_post', post_id=comment.post_id, reply=comment_id, author=comment.author) + '#comment-form')
 
 
 @cook_bp.route('/change-theme/<theme_name>')
@@ -33,3 +90,6 @@ def change_theme(theme_name):
     response = make_response(redirect_back())
     response.set_cookie('theme', theme_name, max_age=30 * 24 * 60 * 60)
     return response
+
+
+

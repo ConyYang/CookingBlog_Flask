@@ -125,3 +125,12 @@ def fake_comments(count=80):
         )
         db.session.add(comment)
     db.session.commit()
+
+
+def fake_links():
+    twitter = Link(name='Twitter', url='#')
+    facebook = Link(name='Facebook', url='#')
+    linkedin = Link(name='LinkedIn', url='#')
+    google = Link(name='Google+', url='#')
+    db.session.add_all([twitter, facebook, linkedin, google])
+    db.session.commit()

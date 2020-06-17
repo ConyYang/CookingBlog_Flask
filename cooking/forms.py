@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm
 from flask_ckeditor import CKEditorField
 from wtforms import StringField, PasswordField, SubmitField, BooleanField, SelectField,\
     ValidationError, TextAreaField, HiddenField
-from wtforms.validators import DataRequired, Length, Email, URL, Optional
+from wtforms.validators import DataRequired, Length, Email, URL, Optional, email_validator
 from cooking.models import Category
 
 
@@ -14,7 +14,7 @@ class LoginForm(FlaskForm):
 
 
 class RecipeForm(FlaskForm):
-    title = StringField('Title', validators=[DataRequired, Length(1, 60)])
+    title = StringField('Title', validators=[DataRequired(), Length(1, 60)])
     category = SelectField('Category', coerce=int, default=1)
     body = CKEditorField('Body', validators=[DataRequired()])
     submit = SubmitField()
