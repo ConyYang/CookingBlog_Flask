@@ -19,6 +19,13 @@ class BaseConfig(object):
     COOKLOG_MANAGE_POST_PER_PAGE = 15
     COOKLOG_COMMENT_PER_PAGE = 15
 
+    COOKING_THEMES = {'perfect_blue': 'Perfect Blue', 'black_swan': 'Black Swan'}
+    COOKING_SLOW_QUERY_THRESHOLD = 1
+
+    COOKING_UPLOAD_PATH = os.path.join(basedir, 'uploads')
+    COOKING_ALLOWED_IMAGE_EXTENSIONS = ['png', 'jpg', 'jpeg', 'gif']
+
+
 
 class DevelopmentConfig(BaseConfig):
     SQLALCHEMY_DATABASE_URI = 'sqlite:///' + os.path.join(basedir, 'data-dev.db')

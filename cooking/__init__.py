@@ -14,7 +14,7 @@ def make_app(config_name=None):
     if config_name is None:
         config_name = os.getenv('FLASK_CONFIG', 'development')
 
-    app = Flask('Cooklog')
+    app = Flask('cooking')
     app.config.from_object(configuration[config_name])
 
     register_blue_prints(app)  # blueprints
