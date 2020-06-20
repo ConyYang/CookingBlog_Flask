@@ -132,8 +132,8 @@ def register_errors(app):
 def register_commands(app):
     @app.cli.command()
     @click.option('--category', default=7, help='No. of Cooking Categories, default is 7.')
-    @click.option('--recipe', default=10, help='No. of recipes, default is 10.')
-    @click.option('--comment', default=80, help='No of comments, defualt is 80')
+    @click.option('--recipe', default=18, help='No. of recipes, default is 10.')
+    @click.option('--comment', default=500, help='No of comments, defualt is 80')
     def forge(category, recipe, comment):
         """
         Generate half fake database

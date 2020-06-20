@@ -19,3 +19,6 @@ pip install flask_wtf
 pip install flask_login
 pip install flask_debugtoolbar
 pip install flask_migrate
+
+pip install pipenv
+pipenv install unidecode

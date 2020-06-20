@@ -3,7 +3,9 @@
 {% block title %}{{ post.title }}{% endblock %}
 {% from 'bootstrap/form.html' import render_form %}
 {% from 'bootstrap/pagination.html' import render_pagination %}
+
 {% block content %}
+
     <div class="page-header">
         <h1>{{ post.title }}
             <span class="float-right">
@@ -20,16 +22,22 @@
         </h1>
         <small>
             Category: <a
-                href="{{ url_for('.show_category', category_id=post.category.id) }}">{{ post.category.name }}</a><br>
+                href="{{ url_for('.show_category', category_id=post.category.id) }}">{{ post.category.label }}</a><br>
             Date: {{ moment(post.timestamp).format('LL') }}
         </small>
     </div>
+    <div class = "row">
+        <img src="{{url_for('static', filename='pasta.jpg')}}"/>
+    </div>
+
     <div class="row">
         <div class="col-sm-8">
             {{ post.body|safe }}
+
             <hr>
             <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target=".postLinkModal">Share
             </button>
+
             <div class="modal fade postLinkModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel"
                  aria-hidden="true">
                 <div class="modal-dialog">
@@ -49,6 +57,7 @@
                     </div>
                 </div>
             </div>
+
             <div class="comments" id="comments">
                 <h3>{{ pagination.total }} Comments
                     <small>
@@ -90,10 +99,10 @@
                                 </div>
                                 {% if comment.replied %}
                                     <p class="alert alert-dark reply-body">{{ comment.replied.author }}:
-                                        <br>{{ comment.replied.body }}
+                                        <br>{{ comment.replied.content }}
                                     </p>
                                 {%- endif -%}
-                                <p class="mb-1">{{ comment.body }}</p>
+                                <p class="mb-1">{{ comment.content }}</p>
                                 <div class="float-right">
                                     <a class="btn btn-light btn-sm"
                                        href="{{ url_for('.reply_comment', comment_id=comment.id) }}">Reply</a>
@@ -115,6 +124,7 @@
                     <div class="tip"><h5>No comments.</h5></div>
                 {% endif %}
             </div>
+
             {% if comments %}
                 {{ render_pagination(pagination, fragment='#comments') }}
             {% endif %}
@@ -131,9 +141,13 @@
             {% else %}
                 <div class="tip"><h5>Comment disabled.</h5></div>
             {% endif %}
+
+
         </div>
+
         <div class="col-sm-4 sidebar">
             {% include "cook/_sidebar.html" %}
         </div>
+
     </div>
 {% endblock %}

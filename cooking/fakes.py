@@ -22,15 +22,12 @@ def fake_admin():
     db.session.commit()
 
 
-category_list = ['Si Chuan', 'Cantonese', 'Western',
-                 'Thailand', 'Japanese', 'French',
-                 'Dessert']
+category_list = ['Cantonese', 'Dessert', 'French',
+                 'Japanese', 'Si Chuan', 'Thailand',
+                 'Western']
 
 
 def add_categories(count=7):
-    category = Category(label='default')
-    db.session.add(category)
-
     for i in range(count):
         category = Category(label=category_list[i])
         db.session.add(category)
@@ -41,32 +38,42 @@ def add_categories(count=7):
 
 
 titles_list = [
-    'Twice Cooked Spicy Pork Slices',
-    'ClayPot Rice',
-    'Tomato Pasta',
-    'Curried crab',
-    'Beef Ramen',
-    'Baked Snail',
+    'Xiao Long Bao',
     'Tiramisu',
-    'Hot Garlic Source Eggplant',
+    'Baked Snail',
+    'Beef Ramen',
+    'Twice Cooked Spicy Pork Slices',
+    'Curried crab',
+    'Tomato Pasta',
+
     'Char siew',
-    'Onion Steak'
+    'Rice Cake',
+    'Tomato Pasta',
+    'Su Shi',
+    'Hot Garlic Source Eggplant',
+    'Grilled Steamed Lobster',
+    'Onion Steak',
+
+    'Scrambled egg with shrimps',
+    'Ice Cream',
+    'Potato Salad',
+    'Dumplings'
 ]
 
 
-def fake_recipes(count=10):
+def fake_recipes(count=12):
     for i in range(count):
         post = Post(
             title=titles_list[i],
             content=faker.text(),
-            category=Category.query.get(i % len(category_list) + 1),
+            category=Category.query.get(i % len(category_list)+1),
             timestamp=faker.date_time_this_year()
         )
         db.session.add(post)
     db.session.commit()
 
 
-def fake_comments(count=80):
+def fake_comments(count=500):
     # Reviewed comments
     for i in range(count):
         comment = Comment(
