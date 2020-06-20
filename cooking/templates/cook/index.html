@@ -1,15 +1,22 @@
-{% if categories %}
-    <div class="card mb-3">
-        <div class="card-header">Categories</div>
-        <ul class="list-group list-group-flush">
-            {% for category in categories %}
-                <li class="list-group-item  list-group-item-action d-flex justify-content-between align-items-center">
-                    <a href="{{ url_for('cook.show_category', category_id=category.id) }}">
-                        {{ category.label }}
-                    </a>
-                    <span class="badge badge-primary badge-pill"> {{ category.posts|length }}</span>
-                </li>
-            {% endfor %}
-        </ul>
+{% extends 'base.html' %}
+{% from 'bootstrap/pagination.html' import render_pager %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+    <div class="page-header">
+        <h1 class="display-3">{{ admin.blog_title|default('Blog Title') }}</h1>
+        <h4 class="text-muted">&nbsp;{{ admin.blog_sub_title|default('Blog Subtitle') }}</h4>
     </div>
-{% endif %}
+    <div class="row">
+        <div class="col-sm-8">
+            {% include 'cook/_posts.html' %}
+            {% if posts %}
+                <div class="page-footer">{{ render_pager(pagination) }}</div>
+            {% endif %}
+        </div>
+        <div class="col-sm-4 sidebar">
+            {% include 'cook/_sidebar.html' %}
+        </div>
+    </div>
+{% endblock %}

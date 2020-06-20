@@ -13,6 +13,14 @@ class LoginForm(FlaskForm):
     submit = SubmitField('Login')
 
 
+class SettingForm(FlaskForm):
+    name = StringField('Name', validators=[DataRequired(), Length(1, 30)])
+    blog_title = StringField('Blog Title', validators=[DataRequired(), Length(1, 60)])
+    blog_sub_title = StringField('Blog Sub Title', validators=[DataRequired(), Length(1, 100)])
+    about = CKEditorField('About Page', validators=[DataRequired()])
+    submit = SubmitField()
+
+
 class RecipeForm(FlaskForm):
     title = StringField('Title', validators=[DataRequired(), Length(1, 60)])
     category = SelectField('Category', coerce=int, default=1)
@@ -46,3 +54,8 @@ class AdminCommentForm(FlaskForm):
     author = HiddenField()
     email = HiddenField()
     site = HiddenField()
+
+class LinkForm(FlaskForm):
+    name = StringField('Name', validators=[DataRequired(), Length(1, 30)])
+    url = StringField('URL', validators=[DataRequired(), URL(), Length(1, 255)])
+    submit = SubmitField()

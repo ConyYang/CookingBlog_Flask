@@ -5,6 +5,8 @@ from cooking.utils import redirect_back
 from flask_login import current_user
 from cooking.extensions import db
 from cooking.emails import *
+
+
 cook_bp = Blueprint('cook', __name__)
 
 

@@ -131,6 +131,53 @@ def register_errors(app):
 
 def register_commands(app):
     @app.cli.command()
+    @click.option('--drop', is_flag=True, help='Create after drop.')
+    def initdb(drop):
+        """Initialize the database."""
+        if drop:
+            click.confirm('This operation will delete the database, do you want to continue?', abort=True)
+            db.drop_all()
+            click.echo('Drop tables.')
+        db.create_all()
+        click.echo('Initialized database.')
+
+    @app.cli.command()
+    @click.option('--username', prompt=True, help='The username used to login.')
+    @click.option('--password', prompt=True, hide_input=True,
+                  confirmation_prompt=True, help='The password used to login.')
+    def init(username, password):
+        """Building Bluelog, just for you."""
+
+        click.echo('Initializing the database...')
+        db.create_all()
+
+        admin = Admin.query.first()
+        if admin is not None:
+            click.echo('The administrator already exists, updating...')
+            admin.username = username
+            admin.set_password(password)
+        else:
+            click.echo('Creating the temporary administrator account...')
+            admin = Admin(
+                username=username,
+                blog_title='Bluelog',
+                blog_sub_title="No, I'm the real thing.",
+                name='Admin',
+                about='Anything about you.'
+            )
+            admin.set_password(password)
+            db.session.add(admin)
+
+        category = Category.query.first()
+        if category is None:
+            click.echo('Creating the default category...')
+            category = Category(label='Japanese')
+            db.session.add(category)
+
+        db.session.commit()
+        click.echo('Done.')
+
+    @app.cli.command()
     @click.option('--category', default=7, help='No. of Cooking Categories, default is 7.')
     @click.option('--recipe', default=18, help='No. of recipes, default is 10.')
     @click.option('--comment', default=500, help='No of comments, defualt is 80')
@@ -138,7 +185,7 @@ def register_commands(app):
         """
         Generate half fake database
         """
-        from cooking.fakes import fake_admin, fake_comments, fake_recipes, add_categories
+        from cooking.fakes import fake_admin, fake_comments, fake_recipes, add_categories, fake_links
         db.drop_all()
         db.create_all()
 
@@ -153,6 +200,9 @@ def register_commands(app):
 
         click.echo('Generating %d comments...' % comment)
         fake_comments(comment)
+
+        click.echo('Generating fake links')
+        fake_links()
 
         click.echo('Done')
 
