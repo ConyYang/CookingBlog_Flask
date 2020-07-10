@@ -56,7 +56,7 @@ def new_post():
         db.session.add(post)
         db.session.commit()
         flash('Post created.', 'success')
-        return redirect(url_for('blog.show_post', post_id=post.id))
+        return redirect(url_for('cook.show_post', post_id=post.id))
     return render_template('admin/new_post.html', form=form)
 
 

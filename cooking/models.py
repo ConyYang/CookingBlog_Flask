@@ -23,7 +23,6 @@ class Admin(db.Model, UserMixin):
 class Category(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     label = db.Column(db.String(30), unique=True)
-    # photo = db.Column(db.String(30), unique=True)
     posts = db.relationship('Post', back_populates='category')
 
 
@@ -31,6 +30,7 @@ class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String(60))
     content = db.Column(db.Text)
+    photo = db.Column(db.String(30), unique=True)
     timestamp = db.Column(db.DateTime, default=datetime.utcnow, index=True)
 
     category_id = db.Column(db.Integer, db.ForeignKey('category.id'))

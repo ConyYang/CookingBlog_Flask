@@ -56,6 +56,7 @@ def register_extensions(app):
     toolbar.init_app(app)
     migrate.init_app(app, db)
 
+
 def register_logging(app):
     class RequestFormatter(logging.Formatter):
 

@@ -27,12 +27,12 @@
         </small>
     </div>
     <div class = "row">
-        <img src="{{url_for('static', filename='pasta.jpg')}}"/>
+        <img src="{{url_for('static', filename=post.photo)}}"/>
     </div>
 
     <div class="row">
         <div class="col-sm-8">
-            {{ post.body|safe }}
+            {{ post.content|safe }}
 
             <hr>
             <button type="button" class="btn btn-primary btn-sm" data-toggle="modal" data-target=".postLinkModal">Share

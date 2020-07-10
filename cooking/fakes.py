@@ -48,7 +48,7 @@ titles_list = [
 
     'Char siew',
     'Rice Cake',
-    'Tomato Pasta',
+    'Grilled Salmon',
     'Su Shi',
     'Hot Garlic Source Eggplant',
     'Grilled Steamed Lobster',
@@ -59,6 +59,29 @@ titles_list = [
     'Potato Salad',
     'Dumplings'
 ]
+photo_list = [
+'xiaolongbao.jpg',
+'tiramisu.jpg',
+'bakedSnail.jpeg',
+'beefRamen.jpg',
+'tcPork.jpeg',
+
+'ccrab.jpeg',
+'pasta.jpg',
+'charsiew.jpg',
+'ricecake.jpeg',
+'salmon.jpg',
+
+'sushi.jpeg',
+'sgEggplant.jpg',
+'grlobster.jpg',
+'steak.jpg',
+
+'shrimps.jpg',
+'icecream.jpg',
+'potatoSalad.png',
+'dumplings.jpg',
+]
 
 
 def fake_recipes(count=12):
@@ -66,6 +89,7 @@ def fake_recipes(count=12):
         post = Post(
             title=titles_list[i],
             content=faker.text(),
+            photo= photo_list[i],
             category=Category.query.get(i % len(category_list)+1),
             timestamp=faker.date_time_this_year()
         )
